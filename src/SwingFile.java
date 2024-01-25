@@ -2,9 +2,8 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
+import javax.swing.border.Border;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -13,7 +12,7 @@ import java.util.Date;
 public class SwingFile extends JFrame implements Runnable { // On implémente l'Interface Runnable pour utiliser un Thread
 	private static final long serialVersionUID = 1L; // valeur qui identifie de manière unique les versions sérialisées de la classe.
 	private static long delai = 1000; 	// Délai (en milisecondes) entre les mises à jour de l'horloge
-	private JLabel horloge;				// Composant JLabel pour afficher l'heure
+	private JLabel horlogeLabel;				// Composant JLabel pour afficher l'heure
 	
 	public SwingFile() {
 		// Configuration de notre fenêtre:
@@ -22,24 +21,45 @@ public class SwingFile extends JFrame implements Runnable { // On implémente l'
 		setSize(500, 500);		
 		setLocationRelativeTo(null);	
 		setVisible(true);
-		
+		initView();
 		// Affichage de l'horloge via la méthode:
-		displayHorloge();
+//		chronometre();
 		
 		// Démarrage du thread:
 		Thread thread = new Thread(this);
 		thread.start();
 	}
 	
-	// Méthode qui configure l'affichage de l'horloge en ajoutant un composant JLabel à la fenêtre:
-	public void displayHorloge() {
-		JPanel contentHorloge = (JPanel) this.getContentPane();	//cette fois-ci, on récupère d'abord le conteneur 
-		contentHorloge.setLayout( new BorderLayout());			// puis on initialise sa stratégie de placement
+	public void initView() {
+		this.getContentPane().setLayout( new BorderLayout());	    
+	    initNorth();
+	    initCenter();
+//	    initSouth();	
+	}
+	// Méthode pour afficher l'horloge:
+	public void initNorth() {
+		JPanel panelNorth = new JPanel();
+		horlogeLabel = new JLabel();
+		horlogeLabel.setFont(new Font("Arial", Font.BOLD, 50));
+		panelNorth.setPreferredSize(new Dimension(200, 70));
+		panelNorth.setBackground(Color.BLUE);
 		
-		horloge = new JLabel();
-		horloge.setFont(new Font("Arial", Font.BOLD, 80));
+		panelNorth.add(horlogeLabel, SwingConstants.CENTER);
+		this.getContentPane().add(panelNorth, BorderLayout.NORTH);
+	}
+	// Méthode pour afficher le chrono:
+	public void initCenter() {
+		JPanel panelCenter = new JPanel();
+		panelCenter.setLayout(new FlowLayout(FlowLayout.LEFT));
 		
-		this.add(horloge, BorderLayout.CENTER);
+		JButton startChrono = new JButton("Start Chrono");
+		startChrono.setPreferredSize(new Dimension(160 , 80));
+		panelCenter.add(startChrono, BorderLayout.WEST);
+		
+		JTextArea chrono = new JTextArea("00:00:00");
+		chrono.setPreferredSize(new Dimension(160 , 80));
+		panelCenter.add(chrono, BorderLayout.EAST);
+		this.getContentPane().add(panelCenter, BorderLayout.CENTER);
 	}
 	
 	// Méthode met à jour l'heure toutes les secondes et actualise le texte de l'étiquette horloge:
@@ -49,7 +69,7 @@ public class SwingFile extends JFrame implements Runnable { // On implémente l'
 			Thread.sleep(delai);
 	        DateFormat df = new SimpleDateFormat("HH:mm:ss");
 	        String formattedDate = df.format(new Date());
-	        horloge.setText(formattedDate);
+	        horlogeLabel.setText(formattedDate);
             
 	      } catch (InterruptedException e) {
 	        e.printStackTrace();
