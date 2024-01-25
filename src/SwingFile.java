@@ -10,33 +10,39 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class SwingFile extends JFrame implements Runnable {
-	private static final long serialVersionUID = 1L;
-	private static long delai = 1000;
-	private JLabel horloge;
+public class SwingFile extends JFrame implements Runnable { // On implémente l'Interface Runnable pour utiliser un Thread
+	private static final long serialVersionUID = 1L; // valeur qui identifie de manière unique les versions sérialisées de la classe.
+	private static long delai = 1000; 	// Délai (en milisecondes) entre les mises à jour de l'horloge
+	private JLabel horloge;				// Composant JLabel pour afficher l'heure
 	
 	public SwingFile() {
+		// Configuration de notre fenêtre:
 		super("Horloge");			
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(500, 500);		
 		setLocationRelativeTo(null);	
 		setVisible(true);
 		
-		horloge();
+		// Affichage de l'horloge via la méthode:
+		displayHorloge();
+		
+		// Démarrage du thread:
 		Thread thread = new Thread(this);
 		thread.start();
 	}
 	
-	public void horloge() {
+	// Méthode qui configure l'affichage de l'horloge en ajoutant un composant JLabel à la fenêtre:
+	public void displayHorloge() {
 		JPanel contentHorloge = (JPanel) this.getContentPane();	//cette fois-ci, on récupère d'abord le conteneur 
 		contentHorloge.setLayout( new BorderLayout());			// puis on initialise sa stratégie de placement
 		
 		horloge = new JLabel();
-		horloge.setFont(new Font("Arial", Font.BOLD, 20));
+		horloge.setFont(new Font("Arial", Font.BOLD, 80));
 		
 		this.add(horloge, BorderLayout.CENTER);
 	}
 	
+	// Méthode met à jour l'heure toutes les secondes et actualise le texte de l'étiquette horloge:
     public void run() {
     	while(true) {
 	      try {
@@ -51,18 +57,7 @@ public class SwingFile extends JFrame implements Runnable {
     	}
     }
     
-//	@Override
-//	public void paint(Graphics g) {		
-//		super.paint(g);		
-//		try {
-//			Image image = ImageIO.read(new File("iledejava.jpg"));
-//			g.drawImage(image,0,0,this);
-//		}
-//		catch(IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
-
+    // La méthode principale qui crée une instance de SwingFile, déclenchant ainsi l'exécution du programme.
 	public static void main(String[] args) {
 		new SwingFile();
 	}
